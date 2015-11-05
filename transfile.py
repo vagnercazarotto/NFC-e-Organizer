@@ -52,16 +52,16 @@ fileList = ftp.nlst()
 
 
 ### control send files
-z = 0 
 itemList = os.listdir(xmlFolder)
 dateNow = datetime.datetime.now().strftime("%Y"+"_"+"%m")
 for x in itemList:
 	fileCreation = os.path.getctime(xmlFolder + x)
 	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
-	if x not in fileList:
-		print "Enviando Arquivo!!"
-		print str(xmlFolder + x)
-		ftp.storbinary('STOR ' + str(x) , open(str(xmlFolder + x),'rb'))
+	if dateNow == initialDate:
+		if x not in fileList:
+			print "Enviando Arquivo!!"
+			print str(xmlFolder + x)
+			ftp.storbinary('STOR ' + str(x) , open(str(xmlFolder + x),'rb'))
 
 
 ## close connection
