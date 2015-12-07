@@ -6,7 +6,17 @@ from ftplib import FTP
 import os
 import io
 import time
+import sys 
 
+try:
+	argv = sys.argv[1:]
+except ValueError:
+		pass
+
+if "--version" in argv or "-v" in argv:
+		print "VERSAO 1.0.1"
+		sys.exit()
+	
 
 ###  INI files
 # you can change this for you default folder 
@@ -34,15 +44,13 @@ folderName = datetime.datetime.now().strftime("%Y"+"_"+"%m") + "_loja_" + str(st
 for x in docList:
 	if folderName == x:
 		cont = 1
+		ftp.cwd(folderName)
 		break
 	else:
 	 	cont = 0
 if cont == 0:
 	ftp.mkd(folderName)
-for x in docList:
-	if folderName == x:
-		ftp.cwd(folderName)
-		break
+	ftp.cwd(folderName)
 ####
 
 ## receive a list of directiories 
@@ -80,15 +88,13 @@ folderName = str(lastMonth) + "_loja_" + str(storeNumber)
 for x in docList:
 	if folderName == x:
 		cont = 1
+		ftp.cwd(folderName)
 		break
 	else:
 	 	cont = 0
 if cont == 0:
 	ftp.mkd(folderName)
-for x in docList:
-	if folderName == x:
-		ftp.cwd(folderName)
-		break
+	ftp.cwd(folderName)
 ####
 
 ## receive a list of directiories 
@@ -97,8 +103,6 @@ fileList = ftp.nlst()
 
 ### control send files
 itemList = os.listdir(xmlFolder)
-month = datetime.datetime.now().month-1
-year = datetime.datetime.now().year
 for x in itemList:
 	fileCreation = os.path.getctime(xmlFolder + x)
 	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
