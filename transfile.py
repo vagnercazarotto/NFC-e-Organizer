@@ -14,20 +14,20 @@ except ValueError:
 		pass
 
 if "--version" in argv or "-v" in argv:
-		print "VERSAO 1.0.1"
+		print "VERSAO 1.0.2"
 		sys.exit()
 	
 
 ###  INI files
 # you can change this for you default folder 
-fileTarget  = open("C:\\rjm\\fileList.ini",'r')
-startINI    = fileTarget.read().split()
-ftpServer   = startINI[0].split("=")[1]
-userName    = startINI[1].split("=")[1]
-password    = startINI[2].split("=")[1]
-storeNumber = startINI[3].split("=")[1]
-xmlFolder 	= startINI[4].split("=")[1]
-print xmlFolder
+fileTarget     = open("C:\\rjm\\fileList.ini",'r')
+startINI       = fileTarget.read().split()
+ftpServer      = startINI[0].split("=")[1]
+userName       = startINI[1].split("=")[1]
+password       = startINI[2].split("=")[1]
+storeNumber    = startINI[3].split("=")[1]
+backupFolder   = startINI[4].split("=")[1]
+custodiaFolder = startINI[5].split("=")[1]
 fileTarget.close()
 ###
 
@@ -58,18 +58,30 @@ fileList = ftp.nlst()
 
 
 ### control send files
-itemList = os.listdir(xmlFolder)
+itemList = os.listdir(backupFolder)
 dateNow = datetime.datetime.now().strftime("%Y"+"_"+"%m")
 for x in itemList:
-	fileCreation = os.path.getctime(xmlFolder + x)
+	fileCreation = os.path.getctime(backupFolder + x)
 	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
 	if dateNow == initialDate:
 		if x not in fileList:
 			print "Enviando Arquivo!!"
-			print str(xmlFolder + x)
-			ftp.storbinary('STOR ' + str(x) , open(str(xmlFolder + x),'rb'))
+			print str(backupFolder + x)
+			ftp.storbinary('STOR ' + str(x) , open(str(backupFolder + x),'rb'))
 
 
+## do the same for custodia folder 			
+
+itemList = os.listdir(custodiaFolder)
+dateNow = datetime.datetime.now().strftime("%Y"+"_"+"%m")
+for x in itemList:
+	fileCreation = os.path.getctime(custodiaFolder + x)
+	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
+	if dateNow == initialDate:
+		if x not in fileList:
+			print "Enviando Arquivo!!"
+			print str(custodiaFolder + x)
+			ftp.storbinary('STOR ' + str(x) , open(str(custodiaFolder + x),'rb'))
 
 
 #### Verify last month
@@ -102,15 +114,27 @@ fileList = ftp.nlst()
 
 
 ### control send files
-itemList = os.listdir(xmlFolder)
+itemList = os.listdir(backupFolder)
 for x in itemList:
-	fileCreation = os.path.getctime(xmlFolder + x)
+	fileCreation = os.path.getctime(backupFolder + x)
 	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
 	if lastMonth == initialDate:
 		if x not in fileList:
 			print "Enviando Arquivo!!"
-			print str(xmlFolder + x)
-			ftp.storbinary('STOR ' + str(x) , open(str(xmlFolder + x),'rb'))
+			print str(backupFolder + x)
+			ftp.storbinary('STOR ' + str(x) , open(str(backupFolder + x),'rb'))
+
+## do the same for custodia folder 
+
+itemList = os.listdir(custodiaFolder)
+for x in itemList:
+	fileCreation = os.path.getctime(custodiaFolder + x)
+	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
+	if lastMonth == initialDate:
+		if x not in fileList:
+			print "Enviando Arquivo!!"
+			print str(custodiaFolder + x)
+			ftp.storbinary('STOR ' + str(x) , open(str(custodiaFolder + x),'rb'))
 
 
 ## close connection
