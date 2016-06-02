@@ -7,6 +7,7 @@ import os
 import io
 import time
 import sys 
+import socket 
 
 try:
 	argv = sys.argv[1:]
@@ -14,7 +15,7 @@ except ValueError:
 		pass
 
 if "--version" in argv or "-v" in argv:
-		print "VERSAO 1.0.2"
+		print "VERSAO 1.0.3"
 		sys.exit()
 	
 
@@ -31,16 +32,36 @@ custodiaFolder = startINI[5].split("=")[1]
 fileTarget.close()
 ###
 
+## change directory name
+monthName ={
+	0:"drop",
+    1:"January",
+    2:"February",
+    3:"March",
+    4:"April",
+    5:"May",
+    6:"June",
+    7:"July",
+    8:"August",
+    9:"September",
+    10:"October",
+    11:"November",
+    12:"December"}
+
+
+
 ## start connection 
 ftp =  FTP(ftpServer)
 ftp.login(user=userName,passwd=password) 
+## keep Alive
+ftp.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 
 ## receive a list of directiories 
 docList = ftp.nlst()
 
 ### Block verify - mkdir and got to folder 
 ### create a folder name from actual date
-folderName = datetime.datetime.now().strftime("%Y"+"_"+"%m") + "_loja_" + str(storeNumber)
+folderName = datetime.datetime.now().strftime("%Y"+"_"+"%B") + "_loja_" + str(storeNumber)
 for x in docList:
 	if folderName == x:
 		cont = 1
@@ -59,10 +80,10 @@ fileList = ftp.nlst()
 
 ### control send files
 itemList = os.listdir(backupFolder)
-dateNow = datetime.datetime.now().strftime("%Y"+"_"+"%m")
+dateNow = datetime.datetime.now().strftime("%Y"+"_"+"%B")
 for x in itemList:
 	fileCreation = os.path.getctime(backupFolder + x)
-	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
+	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%B")
 	if dateNow == initialDate:
 		if x not in fileList:
 			print "Enviando Arquivo!!"
@@ -71,12 +92,11 @@ for x in itemList:
 
 
 ## do the same for custodia folder 			
-
 itemList = os.listdir(custodiaFolder)
-dateNow = datetime.datetime.now().strftime("%Y"+"_"+"%m")
+dateNow = datetime.datetime.now().strftime("%Y"+"_"+"%B")
 for x in itemList:
 	fileCreation = os.path.getctime(custodiaFolder + x)
-	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
+	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%B")
 	if dateNow == initialDate:
 		if x not in fileList:
 			print "Enviando Arquivo!!"
@@ -92,7 +112,7 @@ ftp.cwd("/")
 ## receive a list of directiories 
 docList = ftp.nlst()
 
-month = datetime.datetime.now().month-1
+month =  monthName[datetime.datetime.now().month-1]
 year = datetime.datetime.now().year
 lastMonth = str(year) + "_" + str(month) 
 folderName = str(lastMonth) + "_loja_" + str(storeNumber)
@@ -117,7 +137,7 @@ fileList = ftp.nlst()
 itemList = os.listdir(backupFolder)
 for x in itemList:
 	fileCreation = os.path.getctime(backupFolder + x)
-	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
+	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%B")
 	if lastMonth == initialDate:
 		if x not in fileList:
 			print "Enviando Arquivo!!"
@@ -129,7 +149,7 @@ for x in itemList:
 itemList = os.listdir(custodiaFolder)
 for x in itemList:
 	fileCreation = os.path.getctime(custodiaFolder + x)
-	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%m")
+	initialDate = datetime.datetime.fromtimestamp(fileCreation).strftime("%Y"+"_"+"%B")
 	if lastMonth == initialDate:
 		if x not in fileList:
 			print "Enviando Arquivo!!"
@@ -139,3 +159,4 @@ for x in itemList:
 
 ## close connection
 ftp.quit()
+
