@@ -5,21 +5,21 @@
 
 # Installation
 
-$ git clone https://github.com/vagnercazarotto/NFC-e-Organizer.git
-$ cd NFC-e-Organizer
-$ python build.py 
-$ transfile
+$ git clone https://github.com/vagnercazarotto/NFC-e-Organizer.git \n
+$ cd NFC-e-Organizer \n
+$ python build.py  \n
+$ transfile \n
 
 # Usage 
 
 Edite the **fileList.ini** file, and then incorporate a call to **transfile.exe** in your routine.
 
-ftpserver= your.ftpserver
-user= your.username
-password= your.password
-loja= your.storeName
-backupFolder=C:\\NFCE\\BACKUP\\      << you can change for your default folder 
-custodiaFolder=C:\\NFCE\\CUSTODIA\\  << you can change for your default folder 
+ftpserver= your.ftpserver \n
+user= your.username \n 
+password= your.password \n
+loja= your.storeName \n 
+backupFolder=C:\\NFCE\\BACKUP\\      << you can change for your default folder \n
+custodiaFolder=C:\\NFCE\\CUSTODIA\\  << you can change for your default folder \n
 
 
 # Contributing 
