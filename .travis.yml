@@ -14,4 +14,4 @@ install:
   - pip install FTP
 # command to run tests
 script:
-  - pytest
+  - transfile.py
